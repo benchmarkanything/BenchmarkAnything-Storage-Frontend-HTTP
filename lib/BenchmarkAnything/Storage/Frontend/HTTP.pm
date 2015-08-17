@@ -7,16 +7,12 @@ use Mojo::Base 'Mojolicious';
 
 # This method will run once at server start
 sub startup {
-  my $self = shift;
+        my $self = shift;
 
-  # Documentation browser under "/perldoc"
-  $self->plugin('PODRenderer');
+        my $routes = $self->routes;
 
-  # Router
-  my $r = $self->routes;
-
-  # Normal route to controller
-  $r->get('/')->to('example#welcome');
+        # Normal route to controller
+        $routes->any('/api/v1/search')->to('search#search');
 }
 
 1;
