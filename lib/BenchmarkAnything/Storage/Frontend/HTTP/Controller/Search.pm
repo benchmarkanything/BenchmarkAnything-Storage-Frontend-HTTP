@@ -7,15 +7,25 @@ sub search
 {
         my ($self) = @_;
 
-        $self->render(json => {
-                               This => {
-                                        Is => [
-                                               qw(a deeply nested json)
-                                              ],
-                                        Example => ".",
-                                       },
-                              },
-                     );
+        my $value_id = $self->param('value_id');
+
+        if ($value_id) {
+                $self->render(json => {
+                                       VALUE_ID => $value_id,
+                                      });
+        }
+        else
+        {
+                $self->render(json => {
+                                       This => {
+                                                Is => [
+                                                       qw(a deeply nested json)
+                                                      ],
+                                                Example => ".",
+                                               },
+                                      },
+                             );
+        }
 }
 
 1;

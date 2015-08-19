@@ -12,7 +12,9 @@ sub startup {
         my $routes = $self->routes;
 
         # Normal route to controller
-        $routes->any('/api/v1/search')->to('search#search');
+        $routes
+            ->any('/api/v1/search/:value_id' => [value_id => qr/\d+/])
+            ->to('search#search', value_id => 0);
 }
 
 1;
