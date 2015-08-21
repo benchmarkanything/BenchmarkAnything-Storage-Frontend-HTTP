@@ -28,4 +28,19 @@ sub search
         }
 }
 
+sub listnames
+{
+        my ($self) = @_;
+
+        my $pattern = $self->param('pattern');
+
+        if ($pattern) {
+                $self->render(json => [qw(dummy metric names matching pattern), $pattern]);
+        }
+        else
+        {
+                $self->render(json => [qw(all dummy metric names pattern)]);
+        }
+}
+
 1;
