@@ -9,9 +9,10 @@ use Mojo::Base 'Mojolicious';
 sub startup {
         my $self = shift;
 
-        my $routes = $self->routes;
+        $self->plugin('InstallablePaths');
 
         # Normal route to controller
+        my $routes = $self->routes;
         $routes
             ->any('/api/v1/search/:value_id' => [value_id => qr/\d+/])
             ->to('search#search', value_id => 0);
