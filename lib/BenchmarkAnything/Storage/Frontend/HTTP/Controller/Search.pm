@@ -32,13 +32,10 @@ sub listnames
 
         my $pattern = $self->param('pattern');
 
-        if ($pattern) {
-                $self->render(json => [qw(dummy metric names matching pattern), $pattern]);
-        }
-        else
-        {
-                $self->render(json => [qw(all dummy metric names pattern)]);
-        }
+        my @pattern = $pattern ? ($pattern) : ();
+        my $answer = $self->tapper_benchmark->list_benchmark_names(@pattern);
+
+        $self->render(json => $self->tapper_benchmark->list_benchmark_names(@pattern));
 }
 
 sub fullpoint
