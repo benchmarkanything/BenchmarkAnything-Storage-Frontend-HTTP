@@ -19,6 +19,9 @@ sub startup {
         $routes
             ->any('/api/v1/listnames/:pattern' => [value_id => qr/[\\.\w*+=\%]+/])
             ->to('search#listnames', value_id => 0);
+        $routes
+            ->any('/api/v1/hello')
+            ->to('search#hello');
 }
 
 1;

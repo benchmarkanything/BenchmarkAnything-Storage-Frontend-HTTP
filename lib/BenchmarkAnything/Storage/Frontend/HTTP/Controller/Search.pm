@@ -3,6 +3,13 @@ package BenchmarkAnything::Storage::Frontend::HTTP::Controller::Search;
 
 use Mojo::Base 'Mojolicious::Controller';
 
+sub hello
+{
+        my ($self) = @_;
+
+        $self->render;
+}
+
 sub search
 {
         my ($self) = @_;
