@@ -16,22 +16,13 @@ sub search
 
         my $value_id = $self->param('value_id');
 
+        my $query;
         if ($value_id) {
-                $self->render(json => {
-                                       VALUE_ID => $value_id,
-                                      });
+                $self->render(json => $self->tapper_benchmark->get_single_benchmark_point($value_id));
         }
         else
         {
-                $self->render(json => {
-                                       This => {
-                                                Is => [
-                                                       qw(a deeply nested json)
-                                                      ],
-                                                Example => ".",
-                                               },
-                                      },
-                             );
+                $self->render(json => { This => { Is => [ qw(a deeply nested json) ], Example => ".", }, }, );
         }
 }
 
@@ -48,6 +39,13 @@ sub listnames
         {
                 $self->render(json => [qw(all dummy metric names pattern)]);
         }
+}
+
+sub fullpoint
+{
+        my ($self) = @_;
+
+        my $value_id = $self->param('value_id');
 }
 
 1;
