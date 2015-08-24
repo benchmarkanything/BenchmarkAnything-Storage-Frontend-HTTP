@@ -42,11 +42,4 @@ sub listnames
         $self->render(json => $self->tapper_benchmark->list_benchmark_names(@pattern));
 }
 
-sub fullpoint
-{
-        my ($self) = @_;
-
-        my $value_id = $self->param('value_id');
-}
-
 1;
