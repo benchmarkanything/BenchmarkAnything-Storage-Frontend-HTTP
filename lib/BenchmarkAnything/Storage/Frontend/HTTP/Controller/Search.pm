@@ -3,12 +3,38 @@ package BenchmarkAnything::Storage::Frontend::HTTP::Controller::Search;
 
 use Mojo::Base 'Mojolicious::Controller';
 
+=head2 hello
+
+Returns a hello answer. Mostly for self and unit testing.
+
+=cut
+
 sub hello
 {
         my ($self) = @_;
 
         $self->render;
 }
+
+=head2 search
+
+Parameters:
+
+=over 4
+
+=item * value_id (INTEGER)
+
+If a single integer value is provided the complete data point for that
+ID is returned.
+
+=item * JSON request body
+
+If a JSON request is provided it is interpreted as query according to
+L<Tapper::Benchmark::search()|Tapper::Benchmark/search>.
+
+=back
+
+=cut
 
 sub search
 {
@@ -29,6 +55,23 @@ sub search
                 $self->render(json => []);
         }
 }
+
+=head2 listnames
+
+Returns a list of available benchmark metric NAMEs.
+
+Parameters:
+
+=over 4
+
+=item * pattern (STRING)
+
+If a pattern is provided it restricts the results. The pattern is used
+as SQL LIKE pattern, i.e., it allows to use C<%> as wildcards.
+
+=back
+
+=cut
 
 sub listnames
 {
