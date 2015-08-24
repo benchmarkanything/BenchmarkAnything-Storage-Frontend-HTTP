@@ -15,14 +15,18 @@ sub search
         my ($self) = @_;
 
         my $value_id = $self->param('value_id');
+        my $query    = $self->req->json;
 
-        my $query;
         if ($value_id) {
                 $self->render(json => $self->tapper_benchmark->get_single_benchmark_point($value_id));
         }
+        elsif ($query)
+        {
+                $self->render(json => $self->tapper_benchmark->search_array($query));
+        }
         else
         {
-                $self->render(json => { This => { Is => [ qw(a deeply nested json) ], Example => ".", }, }, );
+                $self->render(json => []);
         }
 }
 
