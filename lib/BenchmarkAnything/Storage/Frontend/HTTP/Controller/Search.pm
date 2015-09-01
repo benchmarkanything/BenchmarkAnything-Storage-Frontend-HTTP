@@ -1,5 +1,5 @@
 package BenchmarkAnything::Storage::Frontend::HTTP::Controller::Search;
-# ABSTRACT: BenchmarkAnything - Mojolicious - REST API
+# ABSTRACT: BenchmarkAnything - REST API - data query
 
 use Mojo::Base 'Mojolicious::Controller';
 
