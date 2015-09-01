@@ -23,6 +23,7 @@ sub startup {
 
         # helper
         $self->helper (tapper_benchmark => sub { $tapper_benchmark } );
+        $self->helper (balib            => sub { $balib } );
 
         # routes
         my $routes = $self->routes;
@@ -35,6 +36,9 @@ sub startup {
         $routes
             ->any('/api/v1/hello')
             ->to('search#hello');
+        $routes
+            ->any('/api/v1/add')
+            ->to('submit#add');
 }
 
 1;
