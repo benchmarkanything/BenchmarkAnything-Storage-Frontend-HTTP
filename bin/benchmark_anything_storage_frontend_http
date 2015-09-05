@@ -1,5 +1,7 @@
-#!/usr/bin/env perl
 # -*- mode: cperl -*-
+#! /usr/bin/perl
+# PODNAME: benchmark-anything-storage-frontend-http
+# ABSTRACT: HTTP frontend to a BenchmarkAnything store
 
 use strict;
 use warnings;
