@@ -19,7 +19,16 @@ my $tapper_benchmark = Tapper::Benchmark->new ({ dbh => $balib->{dbh}, debug => 
 sub startup {
         my $self = shift;
 
+        $self->log->debug("Using BenchmarkAnything");
+        $self->log->debug(" - Configfile: ".$balib->{cfgfile});
+        $self->log->debug(" - Frontend:   ".$balib->{config}{benchmarkanything}{frontend});
+        $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{dsn});
+        die "Config frontend:".$balib->{config}{benchmarkanything}{frontend}."' not yet supported (".$balib->{cfgfile}."), must be 'lib'.\n"
+         if $balib->{config}{benchmarkanything}{frontend} ne 'lib';
+
         $self->plugin('InstallablePaths');
+
+        Mojo::IOLoop->recurring(3 => sub { $self->log->info("RECURRING[".~~localtime."]") });
 
         # helper
         $self->helper (tapper_benchmark => sub { $tapper_benchmark } );
