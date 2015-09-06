@@ -12,7 +12,7 @@ require File::Slurp;
 require YAML::Any;
 require DBI;
 
-my $balib            = BenchmarkAnything::Storage::Frontend::Lib->new->connect;
+my $balib            = BenchmarkAnything::Storage::Frontend::Lib->new;
 my $tapper_benchmark = Tapper::Benchmark->new ({ dbh => $balib->{dbh}, debug => 0 });
 
 # This method will run once at server start
