@@ -20,6 +20,27 @@ my $dsn       = 'dbi:SQLite:t/benchmarkanything.sqlite';
 
 $ENV{BENCHMARKANYTHING_CONFIGFILE} = $cfgfile;
 
+# --------------------------------------------------------------------
+# Careful here!
+#
+# We use BA::S::F.:Lib as direcly connecting Perl lib, i.e.,
+# configured with 'frontend:lib' mode, in it's role to prepare the
+# database for the tests before the server starts.
+#
+# This config is also ok for the BA::S::F::HTTP because it should
+# directly access the DB (via Tapper::Benchmark), i.e., in
+# 'frontend:lib' mode.
+#
+# We can *NOT* configure it as frontend:http because that would
+# contact the HTTP server which uses the same config and would by
+# itself try forward the requests to HTTP - a short circuit.
+#
+# Should you ever want this, create 2 separate configfiles, and
+# provide them explicitely, separated by the purpose: in $balib here
+# the normal lib, and vie $ENV{BENCHMARKANYTHING_CONFIGFILE} to the
+# HTTP server.
+# --------------------------------------------------------------------
+
 diag "\nUsing DSN: '$dsn'";
 
 $balib = BenchmarkAnything::Storage::Frontend::Lib
