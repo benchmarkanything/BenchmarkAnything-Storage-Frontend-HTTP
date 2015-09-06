@@ -44,8 +44,7 @@ $ENV{BENCHMARKANYTHING_CONFIGFILE} = $cfgfile;
 diag "\nUsing DSN: '$dsn'";
 
 $balib = BenchmarkAnything::Storage::Frontend::Lib
- ->new(cfgfile => $cfgfile,
-       really  => $dsn,
+ ->new(really  => $dsn,
        backend => 'tapper',
        verbose => 0,
        debug   => 0,
