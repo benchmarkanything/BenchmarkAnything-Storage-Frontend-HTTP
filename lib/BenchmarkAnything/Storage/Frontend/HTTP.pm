@@ -28,11 +28,15 @@ sub startup {
 
         $self->plugin('InstallablePaths');
 
-        Mojo::IOLoop->recurring(3 => sub { $self->log->info("RECURRING[".~~localtime."]") });
-
         # helper
         $self->helper (tapper_benchmark => sub { $tapper_benchmark } );
         $self->helper (balib            => sub { $balib } );
+
+        # recurrinbox worker
+        Mojo::IOLoop->recurring(10 => sub {
+                                        $self->log->debug("process bench inbox [".~~localtime."]");
+                                        $self->balib->process_raw_result_queue(10);
+                                });
 
         # routes
         my $routes = $self->routes;

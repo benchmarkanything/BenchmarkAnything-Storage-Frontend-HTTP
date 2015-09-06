@@ -28,7 +28,14 @@ sub add
 
         if ($data)
         {
-                $self->balib->add($data);
+                if (!$ENV{HARNESS_ACTIVE}) {
+                        my $orig = $self->balib->{queuemode};
+                        $self->balib->{queuemode} = 1;
+                        $self->balib->add($data);
+                        $self->balib->{queuemode} = $orig;
+                } else {
+                        $self->balib->add($data);
+                }
         }
         # how to report error?
         $self->render;
