@@ -20,6 +20,18 @@ my $dsn       = 'dbi:SQLite:t/benchmarkanything.sqlite';
 
 $ENV{BENCHMARKANYTHING_CONFIGFILE} = $cfgfile;
 
+sub verify {
+        my ($input, $output, $fields) = @_;
+
+        for (my $i=0; $i < @$input; $i++) {
+                my $got      = $output->[$i];
+                my $expected = $input->[$i];
+                foreach my $field (@$fields) {
+                        is($got->{$field},  $expected->{$field},  "re-found [$i].$field = $expected->{$field}");
+                }
+        }
+}
+
 # --------------------------------------------------------------------
 # Careful here!
 #
@@ -117,15 +129,20 @@ $expected = {
             };
 cmp_deeply($got, $expected, "search/:id to get single point");
 
+# Create and fill test DB
+$balib->createdb;
+
+# fill data
+$json = "".File::Slurp::read_file('t/valid-benchmark-anything-data-01.json');
+$data = JSON::decode_json($json);
+$t->post_ok('/api/v1/add' => {Accept => '*/*'} => json => $data);
+
 # search data
 $json = "".File::Slurp::read_file('t/query-benchmark-anything-03.json');
 $query = JSON::decode_json($json);
-diag "query: ".Dumper($query);
 $t->post_ok('/api/v1/search' => {Accept => '*/*'} => json => $query);
 $got      = $t->tx->res->json;
 $expected = JSON::decode_json("".File::Slurp::read_file('t/query-benchmark-anything-03-expectedresult.json'));
-use Data::Dumper;
-diag "got: ".Dumper($got);
-cmp_bag($got, $expected, "search");
+verify($got, $expected, [qw(NAME VALUE comment compiler keyword)]);
 
 done_testing();
