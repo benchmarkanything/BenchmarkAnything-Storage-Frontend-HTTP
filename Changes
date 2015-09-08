@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.002     2015-09-08
         - /api/v1/{add,search,listnames} - to submit BenchmarkAnything data points
         - work in queueing mode as provided by Tapper::Benchmark backend,
           inclusive workers in async IOLoop
