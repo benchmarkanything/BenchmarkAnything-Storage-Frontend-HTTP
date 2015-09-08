@@ -26,6 +26,10 @@ sub startup {
         die "Config frontend:".$balib->{config}{benchmarkanything}{frontend}."' not yet supported (".$balib->{cfgfile}."), must be 'lib'.\n"
          if $balib->{config}{benchmarkanything}{frontend} ne 'lib';
 
+        my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{queueing}{processing_batch_size} || 100;
+        my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{queueing}{processing_sleep}      ||  30;
+        my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{queueing}{gc_sleep}              || 120;
+
         $self->plugin('InstallablePaths');
 
         # helper
@@ -34,8 +38,12 @@ sub startup {
 
         # recurrinbox worker
         Mojo::IOLoop->recurring(10 => sub {
-                                        $self->log->debug("process bench inbox [".~~localtime."]");
-                                        $self->balib->process_raw_result_queue(10);
+                                        $self->log->debug("process bench queue [".~~localtime."]");
+                                        $self->balib->process_raw_result_queue($queueing_processing_batch_size);
+                                });
+        Mojo::IOLoop->recurring(120 => sub {
+                                        $self->log->debug("garbage collection [".~~localtime."]");
+                                        $self->balib->gc();
                                 });
 
         # routes
