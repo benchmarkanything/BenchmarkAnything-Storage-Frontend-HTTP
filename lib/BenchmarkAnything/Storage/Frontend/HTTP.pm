@@ -37,11 +37,11 @@ sub startup {
         $self->helper (balib            => sub { $balib } );
 
         # recurrinbox worker
-        Mojo::IOLoop->recurring(10 => sub {
-                                        $self->log->debug("process bench queue [".~~localtime."]");
+        Mojo::IOLoop->recurring($queueing_processing_sleep => sub {
+                                        $self->log->debug("process bench queue (batchsize: $queueing_processing_batch_size) [".~~localtime."]");
                                         $self->balib->process_raw_result_queue($queueing_processing_batch_size);
                                 });
-        Mojo::IOLoop->recurring(120 => sub {
+        Mojo::IOLoop->recurring($queueing_gc_sleep => sub {
                                         $self->log->debug("garbage collection [".~~localtime."]");
                                         $self->balib->gc();
                                 });
