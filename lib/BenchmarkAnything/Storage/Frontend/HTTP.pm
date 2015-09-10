@@ -21,14 +21,14 @@ sub startup {
 
         $self->log->debug("Using BenchmarkAnything");
         $self->log->debug(" - Configfile: ".$balib->{cfgfile});
-        $self->log->debug(" - Frontend:   ".$balib->{config}{benchmarkanything}{frontend});
-        $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{dsn});
-        die "Config frontend:".$balib->{config}{benchmarkanything}{frontend}."' not yet supported (".$balib->{cfgfile}."), must be 'lib'.\n"
-         if $balib->{config}{benchmarkanything}{frontend} ne 'lib';
+        $self->log->debug(" - Backend:    ".$balib->{config}{benchmarkanything}{backend});
+        $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{dsn});
+        die "Config backend:".$balib->{config}{benchmarkanything}{backend}."' not yet supported (".$balib->{cfgfile}."), must be 'local'.\n"
+         if $balib->{config}{benchmarkanything}{backend} ne 'local';
 
-        my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{queueing}{processing_batch_size} || 100;
-        my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{queueing}{processing_sleep}      ||  30;
-        my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{queueing}{gc_sleep}              || 120;
+        my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{queueing}{processing_batch_size} || 100;
+        my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{queueing}{processing_sleep}      ||  30;
+        my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{queueing}{gc_sleep}              || 120;
 
         $self->plugin('InstallablePaths');
 

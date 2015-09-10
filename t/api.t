@@ -57,12 +57,11 @@ diag "\nUsing DSN: '$dsn'";
 
 $balib = BenchmarkAnything::Storage::Frontend::Lib
  ->new(really  => $dsn,
-       backend => 'tapper',
        verbose => 0,
        debug   => 0,
       )
  ->connect;
-is ($balib->{config}{benchmarkanything}{backends}{tapper}{benchmark}{dsn}, $dsn, "config - dsn");
+is ($balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{dsn}, $dsn, "config - dsn");
 
 diag "\n========== submit data ==========";
 
