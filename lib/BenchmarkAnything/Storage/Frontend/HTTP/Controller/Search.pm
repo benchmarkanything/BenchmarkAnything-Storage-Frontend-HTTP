@@ -30,7 +30,7 @@ ID is returned.
 =item * JSON request body
 
 If a JSON request is provided it is interpreted as query according to
-L<Tapper::Benchmark::search()|Tapper::Benchmark/search>.
+L<BenchmarkAnything::Storage::Backend::SQL::search()|BenchmarkAnything::Storage::Backend::SQL/search>.
 
 =back
 
@@ -44,11 +44,11 @@ sub search
         my $query    = $self->req->json;
 
         if ($value_id) {
-                $self->render(json => $self->tapper_benchmark->get_single_benchmark_point($value_id));
+                $self->render(json => $self->backend->get_single_benchmark_point($value_id));
         }
         elsif ($query)
         {
-                $self->render(json => $self->tapper_benchmark->search_array($query));
+                $self->render(json => $self->backend->search_array($query));
         }
         else
         {
@@ -80,9 +80,9 @@ sub listnames
         my $pattern = $self->param('pattern');
 
         my @pattern = $pattern ? ($pattern) : ();
-        my $answer = $self->tapper_benchmark->list_benchmark_names(@pattern);
+        my $answer = $self->backend->list_benchmark_names(@pattern);
 
-        $self->render(json => $self->tapper_benchmark->list_benchmark_names(@pattern));
+        $self->render(json => $self->backend->list_benchmark_names(@pattern));
 }
 
 1;

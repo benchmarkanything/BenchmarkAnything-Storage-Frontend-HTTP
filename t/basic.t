@@ -3,9 +3,9 @@ use Mojo::Base -strict;
 use Test::More;
 use Test::Mojo;
 
-# my $cfgfile   = "t/benchmarkanything-tapper-mysql.cfg";
+# my $cfgfile   = "t/benchmarkanything-mysql.cfg";
 # my $dsn       = 'DBI:mysql:database=benchmarkanythingtest';
-my $cfgfile   = "t/benchmarkanything-tapper.cfg";
+my $cfgfile   = "t/benchmarkanything.cfg";
 my $dsn       = 'dbi:SQLite:t/benchmarkanything.sqlite';
 
 $ENV{BENCHMARKANYTHING_CONFIGFILE} = $cfgfile;

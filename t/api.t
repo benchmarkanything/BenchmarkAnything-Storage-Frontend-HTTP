@@ -15,7 +15,7 @@ my $balib;
 my $expected;
 my $got;
 
-my $cfgfile   = "t/benchmarkanything-tapper.cfg";
+my $cfgfile   = "t/benchmarkanything.cfg";
 my $dsn       = 'dbi:SQLite:t/benchmarkanything.sqlite';
 
 $ENV{BENCHMARKANYTHING_CONFIGFILE} = $cfgfile;
@@ -40,7 +40,7 @@ sub verify {
 # database for the tests before the server starts.
 #
 # This config is also ok for the BA::S::F::HTTP because it should
-# directly access the DB (via Tapper::Benchmark), i.e., in
+# directly access the DB (via BenchmarkAnything::Storage::Backend::SQL), i.e., in
 # 'frontend:lib' mode.
 #
 # We can *NOT* configure it as frontend:http because that would
@@ -61,7 +61,7 @@ $balib = BenchmarkAnything::Storage::Frontend::Lib
        debug   => 0,
       )
  ->connect;
-is ($balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{dsn}, $dsn, "config - dsn");
+is ($balib->{config}{benchmarkanything}{storage}{backend}{sql}{dsn}, $dsn, "config - dsn");
 
 diag "\n========== submit data ==========";
 

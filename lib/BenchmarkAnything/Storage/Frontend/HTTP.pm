@@ -7,13 +7,13 @@ use Mojo::Base 'Mojolicious';
 
 require BenchmarkAnything::Storage::Frontend::Lib;
 require File::HomeDir; # MUST 'require', 'use' conflicts with Mojolicious
-require Tapper::Benchmark;
+require BenchmarkAnything::Storage::Backend::SQL;
 require File::Slurp;
 require YAML::Any;
 require DBI;
 
-my $balib            = BenchmarkAnything::Storage::Frontend::Lib->new;
-my $tapper_benchmark = Tapper::Benchmark->new ({ dbh => $balib->{dbh}, debug => 0 });
+my $balib   = BenchmarkAnything::Storage::Frontend::Lib->new;
+my $backend = BenchmarkAnything::Storage::Backend::SQL->new ({ dbh => $balib->{dbh}, debug => 0 });
 
 # This method will run once at server start
 sub startup {
@@ -22,19 +22,19 @@ sub startup {
         $self->log->debug("Using BenchmarkAnything");
         $self->log->debug(" - Configfile: ".$balib->{cfgfile});
         $self->log->debug(" - Backend:    ".$balib->{config}{benchmarkanything}{backend});
-        $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{dsn});
+        $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{storage}{backend}{sql}{dsn});
         die "Config backend:".$balib->{config}{benchmarkanything}{backend}."' not yet supported (".$balib->{cfgfile}."), must be 'local'.\n"
          if $balib->{config}{benchmarkanything}{backend} ne 'local';
 
-        my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{queueing}{processing_batch_size} || 100;
-        my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{queueing}{processing_sleep}      ||  30;
-        my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{storage}{tapper}{benchmark}{queueing}{gc_sleep}              || 120;
+        my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_batch_size} || 100;
+        my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_sleep}      ||  30;
+        my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{gc_sleep}              || 120;
 
         $self->plugin('InstallablePaths');
 
         # helper
-        $self->helper (tapper_benchmark => sub { $tapper_benchmark } );
-        $self->helper (balib            => sub { $balib } );
+        $self->helper (backend => sub { $backend } );
+        $self->helper (balib   => sub { $balib   } );
 
         # recurrinbox worker
         Mojo::IOLoop->recurring($queueing_processing_sleep => sub {
