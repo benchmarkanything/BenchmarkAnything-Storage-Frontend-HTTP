@@ -30,6 +30,10 @@ sub startup {
         my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_sleep}      ||  30;
         my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{gc_sleep}              || 120;
 
+        $self->log->debug(" - Q.batch_size: $queueing_processing_batch_size");
+        $self->log->debug(" - Q.sleep:      $queueing_processing_sleep");
+        $self->log->debug(" - Q.gc_sleep:   $queueing_gc_sleep");
+
         $self->plugin('InstallablePaths');
 
         # helper
