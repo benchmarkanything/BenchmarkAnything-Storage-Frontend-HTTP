@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.006     2015-09-24
         - adapt to refactored config file handling
 
 0.005     2015-09-20
