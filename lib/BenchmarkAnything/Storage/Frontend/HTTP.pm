@@ -20,10 +20,10 @@ sub startup {
         my $self = shift;
 
         $self->log->debug("Using BenchmarkAnything");
-        $self->log->debug(" - Configfile: ".$balib->{cfgfile});
+        $self->log->debug(" - Configfile: ".$balib->{config}{cfgfile});
         $self->log->debug(" - Backend:    ".$balib->{config}{benchmarkanything}{backend});
         $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{storage}{backend}{sql}{dsn});
-        die "Config backend:".$balib->{config}{benchmarkanything}{backend}."' not yet supported (".$balib->{cfgfile}."), must be 'local'.\n"
+        die "Config backend:".$balib->{config}{benchmarkanything}{backend}."' not yet supported (".$balib->{config}{cfgfile}."), must be 'local'.\n"
          if $balib->{config}{benchmarkanything}{backend} ne 'local';
 
         my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_batch_size} || 100;
