@@ -29,12 +29,12 @@ sub add
         if ($data)
         {
                 if (!$ENV{HARNESS_ACTIVE}) {
-                        my $orig = $self->balib->{queuemode};
-                        $self->balib->{queuemode} = 1;
-                        $self->balib->add($data);
-                        $self->balib->{queuemode} = $orig;
+                        my $orig = $self->app->balib->{queuemode};
+                        $self->app->balib->{queuemode} = 1;
+                        $self->app->balib->add($data);
+                        $self->app->balib->{queuemode} = $orig;
                 } else {
-                        $self->balib->add($data);
+                        $self->app->balib->add($data);
                 }
         }
         # how to report error?

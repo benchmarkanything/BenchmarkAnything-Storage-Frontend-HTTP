@@ -6,30 +6,58 @@ package BenchmarkAnything::Storage::Frontend::HTTP;
 
 use Mojo::Base 'Mojolicious';
 
-require BenchmarkAnything::Storage::Frontend::Lib;
 require File::HomeDir; # MUST 'require', 'use' conflicts with Mojolicious
-require BenchmarkAnything::Storage::Backend::SQL;
 require File::Slurp;
 require YAML::Any;
 require DBI;
 
-my $balib   = BenchmarkAnything::Storage::Frontend::Lib->new;
-my $backend = BenchmarkAnything::Storage::Backend::SQL->new ({ dbh => $balib->{dbh}, debug => 0 });
+has bacfg => sub
+{
+        require BenchmarkAnything::Config;
+        return BenchmarkAnything::Config->new;
+};
 
-# This method will run once at server start
+has balib => sub
+{
+        my $self = shift;
+
+        require BenchmarkAnything::Storage::Frontend::Lib;
+        return BenchmarkAnything::Storage::Frontend::Lib->new;
+};
+
+has backend => sub
+{
+        my $self = shift;
+
+        require BenchmarkAnything::Storage::Backend::SQL;
+        return BenchmarkAnything::Storage::Backend::SQL->new ({ dbh => $self->app->balib->{dbh}, debug => 0 });
+};
+
+
+
+# This method will run once at server start.
+#
+# IMPORTANT:
+# ----------
+# YOU MUST NOT CALL ->balib() INSIDE startup()!
+# THAT WOULD INSTANTIATE THE SAME DB CONNECTION FOR MULTIPLE
+# PREFORKED PROCESSES AND THEREFORE MIX UP TRANSACTIONS.
 sub startup {
         my $self = shift;
 
         $self->log->debug("Using BenchmarkAnything");
-        $self->log->debug(" - Configfile: ".$balib->{config}{cfgfile});
-        $self->log->debug(" - Backend:    ".$balib->{config}{benchmarkanything}{backend});
-        $self->log->debug(" - DSN:        ".$balib->{config}{benchmarkanything}{storage}{backend}{sql}{dsn});
-        die "Config backend:".$balib->{config}{benchmarkanything}{backend}."' not yet supported (".$balib->{config}{cfgfile}."), must be 'local'.\n"
-         if $balib->{config}{benchmarkanything}{backend} ne 'local';
+        $self->log->debug(" - Configfile: ".$self->app->bacfg->{cfgfile});
+        $self->log->debug(" - Backend:    ".$self->app->bacfg->{benchmarkanything}{backend});
+        $self->log->debug(" - DSN:        ".$self->app->bacfg->{benchmarkanything}{storage}{backend}{sql}{dsn});
+        die
+         "Config backend:".$self->app->bacfg->{benchmarkanything}{backend}.
+          "' not yet supported (".$self->app->bacfg->{cfgfile}.
+           "), must be 'local'.\n"
+            if $self->app->bacfg->{benchmarkanything}{backend} ne 'local';
 
-        my $queueing_processing_batch_size = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_batch_size} || 100;
-        my $queueing_processing_sleep      = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_sleep}      ||  30;
-        my $queueing_gc_sleep              = $balib->{config}{benchmarkanything}{storage}{backend}{sql}{queueing}{gc_sleep}              || 120;
+        my $queueing_processing_batch_size = $self->app->bacfg->{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_batch_size} || 100;
+        my $queueing_processing_sleep      = $self->app->bacfg->{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_sleep}      ||  30;
+        my $queueing_gc_sleep              = $self->app->bacfg->{benchmarkanything}{storage}{backend}{sql}{queueing}{gc_sleep}              || 120;
 
         $self->log->debug(" - Q.batch_size: $queueing_processing_batch_size");
         $self->log->debug(" - Q.sleep:      $queueing_processing_sleep");
@@ -37,18 +65,14 @@ sub startup {
 
         $self->plugin('InstallablePaths');
 
-        # helper
-        $self->helper (backend => sub { $backend } );
-        $self->helper (balib   => sub { $balib   } );
-
         # recurrinbox worker
         Mojo::IOLoop->recurring($queueing_processing_sleep => sub {
                                         $self->log->debug("process bench queue (batchsize: $queueing_processing_batch_size) [".~~localtime."]");
-                                        $self->balib->process_raw_result_queue($queueing_processing_batch_size);
+                                        $self->app->balib->process_raw_result_queue($queueing_processing_batch_size);
                                 });
         Mojo::IOLoop->recurring($queueing_gc_sleep => sub {
                                         $self->log->debug("garbage collection [".~~localtime."]");
-                                        $self->balib->gc();
+                                        $self->app->balib->gc();
                                 });
 
         # routes

@@ -44,11 +44,11 @@ sub search
         my $query    = $self->req->json;
 
         if ($value_id) {
-                $self->render(json => $self->backend->get_single_benchmark_point($value_id));
+                $self->render(json => $self->app->backend->get_single_benchmark_point($value_id));
         }
         elsif ($query)
         {
-                $self->render(json => $self->backend->search_array($query));
+                $self->render(json => $self->app->backend->search_array($query));
         }
         else
         {
@@ -80,9 +80,9 @@ sub listnames
         my $pattern = $self->param('pattern');
 
         my @pattern = $pattern ? ($pattern) : ();
-        my $answer = $self->backend->list_benchmark_names(@pattern);
+        my $answer = $self->app->backend->list_benchmark_names(@pattern);
 
-        $self->render(json => $self->backend->list_benchmark_names(@pattern));
+        $self->render(json => $self->app->backend->list_benchmark_names(@pattern));
 }
 
 1;
