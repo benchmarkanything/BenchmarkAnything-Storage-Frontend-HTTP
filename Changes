@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - fix db connection handling to correctly work with prefork
+          daemons
 
 0.006     2015-09-24
         - adapt to refactored config file handling
