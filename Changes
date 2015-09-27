@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.007     2015-09-27
         - fix db connection handling to correctly work with prefork
           daemons
 
