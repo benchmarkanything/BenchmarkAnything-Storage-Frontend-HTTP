@@ -4,7 +4,7 @@ use Test::Deep 'cmp_bag', 'cmp_deeply';
 use Test::More;
 use Test::Mojo;
 use JSON;
-use File::Slurp;
+use File::Slurper;
 require BenchmarkAnything::Storage::Frontend::Lib;
 
 my $t;
@@ -80,7 +80,7 @@ $t->get_ok('/api/v1/listnames')
 $t->get_ok('/api/v1/search')->status_is(200);
 
 # submit data
-$json = "".File::Slurp::read_file('t/valid-benchmark-anything-data-01.json');
+$json = File::Slurper::read_text('t/valid-benchmark-anything-data-01.json');
 $data = JSON::decode_json($json);
 $t->post_ok('/api/v1/add' => {Accept => '*/*'} => json => $data);
 
@@ -90,7 +90,7 @@ $t->get_ok('/api/v1/listnames')
  ->json_is([qw( benchmarkanything.test.metric )]);
 
 # submit more data
-$json = "".File::Slurp::read_file('t/valid-benchmark-anything-data-02.json');
+$json = File::Slurper::read_text('t/valid-benchmark-anything-data-02.json');
 $data = JSON::decode_json($json);
 $t->post_ok('/api/v1/add' => {Accept => '*/*'} => json => $data);
 
@@ -112,7 +112,7 @@ diag "\n========== Search ==========";
 $balib->createdb;
 
 # fill data
-$json = "".File::Slurp::read_file('t/valid-benchmark-anything-data-02.json');
+$json = File::Slurper::read_text('t/valid-benchmark-anything-data-02.json');
 $data = JSON::decode_json($json);
 $t->post_ok('/api/v1/add' => {Accept => '*/*'} => json => $data);
 
@@ -132,16 +132,16 @@ cmp_deeply($got, $expected, "search/:id to get single point");
 $balib->createdb;
 
 # fill data
-$json = "".File::Slurp::read_file('t/valid-benchmark-anything-data-01.json');
+$json = File::Slurper::read_text('t/valid-benchmark-anything-data-01.json');
 $data = JSON::decode_json($json);
 $t->post_ok('/api/v1/add' => {Accept => '*/*'} => json => $data);
 
 # search data
-$json = "".File::Slurp::read_file('t/query-benchmark-anything-03.json');
+$json = File::Slurper::read_text('t/query-benchmark-anything-03.json');
 $query = JSON::decode_json($json);
 $t->post_ok('/api/v1/search' => {Accept => '*/*'} => json => $query);
 $got      = $t->tx->res->json;
-$expected = JSON::decode_json("".File::Slurp::read_file('t/query-benchmark-anything-03-expectedresult.json'));
+$expected = JSON::decode_json(File::Slurper::read_text('t/query-benchmark-anything-03-expectedresult.json'));
 verify($got, $expected, [qw(NAME VALUE comment compiler keyword)]);
 
 done_testing();

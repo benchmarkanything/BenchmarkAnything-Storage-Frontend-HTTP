@@ -7,9 +7,6 @@ package BenchmarkAnything::Storage::Frontend::HTTP;
 use Mojo::Base 'Mojolicious';
 
 require File::HomeDir; # MUST 'require', 'use' conflicts with Mojolicious
-require File::Slurp;
-require YAML::Any;
-require DBI;
 
 has bacfg => sub
 {
