@@ -82,7 +82,7 @@ sub listnames
         my @pattern = $pattern ? ($pattern) : ();
         my $answer = $self->app->backend->list_benchmark_names(@pattern);
 
-        $self->render(json => $self->app->backend->list_benchmark_names(@pattern));
+        $self->render(json => $answer);
 }
 
 1;
