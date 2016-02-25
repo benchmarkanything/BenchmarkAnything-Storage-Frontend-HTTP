@@ -85,4 +85,33 @@ sub listnames
         $self->render(json => $answer);
 }
 
+=head2 listkeys
+
+Returns a list of additional key names.
+
+Parameters:
+
+=over 4
+
+=item * pattern (STRING)
+
+If a pattern is provided it restricts the results. The pattern is used
+as SQL LIKE pattern, i.e., it allows to use C<%> as wildcards.
+
+=back
+
+=cut
+
+sub listkeys
+{
+        my ($self) = @_;
+
+        my $pattern = $self->param('pattern');
+
+        my @pattern = $pattern ? ($pattern) : ();
+        my $answer = $self->app->backend->list_additional_keys(@pattern);
+
+        $self->render(json => $answer);
+}
+
 1;

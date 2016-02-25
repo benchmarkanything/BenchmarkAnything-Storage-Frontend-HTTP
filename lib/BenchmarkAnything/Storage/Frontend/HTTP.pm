@@ -81,6 +81,9 @@ sub startup {
             ->any('/api/v1/listnames/:pattern' => [pattern => qr/[^\/]+/])
             ->to('search#listnames', pattern => '');
         $routes
+            ->any('/api/v1/listkeys/:pattern' => [pattern => qr/[^\/]+/])
+            ->to('search#listkeys', pattern => '');
+        $routes
             ->any('/api/v1/hello')
             ->to('search#hello');
         $routes

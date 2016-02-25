@@ -76,6 +76,11 @@ $t->get_ok('/api/v1/listnames')
  ->status_is(200)
  ->json_is([]);
 
+# listkeys on empty DB
+$t->get_ok('/api/v1/listkeys')
+ ->status_is(200)
+ ->json_is([]);
+
 # search
 $t->get_ok('/api/v1/search')->status_is(200);
 
@@ -105,6 +110,12 @@ $expected = [qw( benchmarkanything.test.metric
                  another.benchmarkanything.test.metric.2
               )];
 cmp_bag($got, $expected, "listnames");
+
+# listkeys after add
+$t->get_ok('/api/v1/listkeys')->status_is(200);
+$got = $t->tx->res->json;
+$expected = [qw( comment compiler keyword )];
+cmp_bag($got, $expected, "listkeys");
 
 diag "\n========== Search ==========";
 
