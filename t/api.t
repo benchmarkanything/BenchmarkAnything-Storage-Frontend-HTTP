@@ -155,4 +155,22 @@ $got      = $t->tx->res->json;
 $expected = JSON::decode_json(File::Slurper::read_text('t/query-benchmark-anything-03-expectedresult.json'));
 verify($got, $expected, [qw(NAME VALUE comment compiler keyword)]);
 
+
+diag "\n========== Stats ==========";
+
+# Create and fill test DB
+$balib->createdb;
+
+# fill data
+$json = File::Slurper::read_text('t/valid-benchmark-anything-data-02.json');
+$data = JSON::decode_json($json);
+$t->post_ok('/api/v1/add' => {Accept => '*/*'} => json => $data);
+
+# simple counts
+$t->get_ok('/api/v1/stats')->status_is(200);
+$got = $t->tx->res->json;
+is($got->{count_datapoints}, 8, "stats - count data points");
+is($got->{count_metrics},    5, "stats - count metrics");
+is($got->{count_keys},       3, "stats - count keys");
+
 done_testing();

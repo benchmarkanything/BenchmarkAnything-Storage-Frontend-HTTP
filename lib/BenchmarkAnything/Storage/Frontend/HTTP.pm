@@ -89,6 +89,9 @@ sub startup {
         $routes
             ->any('/api/v1/add')
             ->to('submit#add');
+        $routes
+            ->any('/api/v1/stats')
+            ->to('search#stats');
 }
 
 1;

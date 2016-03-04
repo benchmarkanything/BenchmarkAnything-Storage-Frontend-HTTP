@@ -114,4 +114,22 @@ sub listkeys
         $self->render(json => $answer);
 }
 
+=head2 stats
+
+Returns a hash with info about the storage, like how many data points,
+how many metrics, how many additional keys, are stored.
+
+Parameters: none
+
+=cut
+
+sub stats
+{
+        my ($self) = @_;
+
+        my $answer = $self->app->backend->get_stats;
+
+        $self->render(json => $answer);
+}
+
 1;
