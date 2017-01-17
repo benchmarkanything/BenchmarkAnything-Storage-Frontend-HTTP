@@ -1,6 +1,6 @@
 use Mojo::Base -strict;
 
-use Test::Deep 'cmp_bag', 'cmp_deeply';
+use Test::Deep 'cmp_bag', 'cmp_deeply', 'superhashof';
 use Test::More;
 use Test::Mojo;
 use JSON;
@@ -137,7 +137,7 @@ $expected = {
              "compiler" => "icc",
              "keyword"  => "zomtec",
             };
-cmp_deeply($got, $expected, "search/:id to get single point");
+cmp_deeply($got, superhashof($expected), "search/:id to get single point");
 
 # Create and fill test DB
 $balib->createdb;

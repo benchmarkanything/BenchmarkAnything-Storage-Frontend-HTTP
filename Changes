@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - fix tests to work with more default entries from backend
 
 0.009     2016-03-04
         - new function 'stats' - counters of points and metrics
