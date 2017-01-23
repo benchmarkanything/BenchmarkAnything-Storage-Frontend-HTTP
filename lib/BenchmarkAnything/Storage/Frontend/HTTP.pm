@@ -62,7 +62,7 @@ sub startup {
 
         $self->plugin('InstallablePaths');
 
-        # recurrinbox worker
+        # recurring worker
         Mojo::IOLoop->recurring($queueing_processing_sleep => sub {
                                         $self->log->debug("process bench queue (batchsize: $queueing_processing_batch_size) [".~~localtime."]");
                                         $self->app->balib->process_raw_result_queue($queueing_processing_batch_size);
