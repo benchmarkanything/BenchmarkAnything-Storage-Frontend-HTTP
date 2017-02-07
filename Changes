@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - require latest ::Backend::SQL
 
 0.010     2017-01-17
         - fix tests to work with more default entries from backend
