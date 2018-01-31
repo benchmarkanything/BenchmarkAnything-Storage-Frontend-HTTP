@@ -56,21 +56,25 @@ sub startup {
         my $queueing_processing_sleep      = $self->app->bacfg->{benchmarkanything}{storage}{backend}{sql}{queueing}{processing_sleep}      ||  30;
         my $queueing_gc_sleep              = $self->app->bacfg->{benchmarkanything}{storage}{backend}{sql}{queueing}{gc_sleep}              || 120;
 
-        $self->log->debug(" - Q.batch_size: $queueing_processing_batch_size");
-        $self->log->debug(" - Q.sleep:      $queueing_processing_sleep");
-        $self->log->debug(" - Q.gc_sleep:   $queueing_gc_sleep");
+        my $disable_process_benchmarkanything_queue = $self->app->bacfg->{benchmarkanything}{storage}{frontend}{http}{disable_process_benchmarkanything_queue} || 0;
+
+        $self->log->debug(" - Q.batch_size:   $queueing_processing_batch_size");
+        $self->log->debug(" - Q.sleep:        $queueing_processing_sleep");
+        $self->log->debug(" - Q.gc_sleep:     $queueing_gc_sleep");
+        $self->log->debug(" - Q.disable_recurring: $disable_process_benchmarkanything_queue");
 
         $self->plugin('InstallablePaths');
 
         # recurring worker
         Mojo::IOLoop->recurring($queueing_processing_sleep => sub {
+                                        sleep(rand($queueing_processing_sleep));
                                         $self->log->debug("process bench queue (batchsize: $queueing_processing_batch_size) [".~~localtime."]");
                                         $self->app->balib->process_raw_result_queue($queueing_processing_batch_size);
-                                });
+                                }) unless $disable_process_benchmarkanything_queue;
         Mojo::IOLoop->recurring($queueing_gc_sleep => sub {
                                         $self->log->debug("garbage collection [".~~localtime."]");
                                         $self->app->balib->gc();
-                                });
+                                }) unless $disable_process_benchmarkanything_queue;
 
         # routes
         my $routes = $self->routes;
