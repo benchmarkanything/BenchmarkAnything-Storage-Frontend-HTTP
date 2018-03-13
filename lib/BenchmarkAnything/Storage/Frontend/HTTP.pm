@@ -19,7 +19,9 @@ has balib => sub
         my $self = shift;
 
         require BenchmarkAnything::Storage::Frontend::Lib;
-        return BenchmarkAnything::Storage::Frontend::Lib->new;
+        my $balib = BenchmarkAnything::Storage::Frontend::Lib->new(cfgfile => $self->app->bacfg->{cfgfile});
+        $self->log->debug(" - balib.cfgfile: ".$balib->{cfgfile});
+        return $balib;
 };
 
 has backend => sub
