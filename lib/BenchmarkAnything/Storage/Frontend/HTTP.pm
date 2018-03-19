@@ -29,7 +29,18 @@ has backend => sub
         my $self = shift;
 
         require BenchmarkAnything::Storage::Backend::SQL;
-        return BenchmarkAnything::Storage::Backend::SQL->new ({ dbh => $self->app->balib->{dbh}, debug => 0 });
+	my $bacfg = $self->app->bacfg;
+
+        my $searchengine = $bacfg->{benchmarkanything}{searchengine} || {};
+        my $dbh_config   = $bacfg->{benchmarkanything}{storage}{backend}{sql} || {};
+
+        return BenchmarkAnything::Storage::Backend::SQL->new ({ dbh => $self->app->balib->{dbh},
+                                                                dbh_config => $dbh_config,
+                                                                debug => $bacfg->{benchmarkanything}{debug},
+                                                                force => $bacfg->{benchmarkanything}{force},
+                                                                verbose => $bacfg->{benchmarkanything}{verbose},
+                                                                (keys %$searchengine ? (searchengine => $searchengine) : ()),
+                                                              });
 };
 
 
