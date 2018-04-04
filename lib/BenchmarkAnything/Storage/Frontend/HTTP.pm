@@ -29,7 +29,7 @@ has backend => sub
         my $self = shift;
 
         require BenchmarkAnything::Storage::Backend::SQL;
-	my $bacfg = $self->app->bacfg;
+        my $bacfg = $self->app->bacfg;
 
         my $searchengine = $bacfg->{benchmarkanything}{searchengine} || {};
         my $dbh_config   = $bacfg->{benchmarkanything}{storage}{backend}{sql} || {};
@@ -71,10 +71,10 @@ sub startup {
 
         my $disable_process_benchmarkanything_queue = $self->app->bacfg->{benchmarkanything}{storage}{frontend}{http}{disable_process_benchmarkanything_queue} || 0;
 
-        $self->log->debug(" - Q.batch_size:   $queueing_processing_batch_size");
-        $self->log->debug(" - Q.sleep:        $queueing_processing_sleep");
-        $self->log->debug(" - Q.gc_sleep:     $queueing_gc_sleep");
-        $self->log->debug(" - Q.disable_recurring: $disable_process_benchmarkanything_queue");
+        $self->log->debug(" - Q.batch_size:         $queueing_processing_batch_size");
+        $self->log->debug(" - Q.sleep:              $queueing_processing_sleep");
+        $self->log->debug(" - Q.gc_sleep:           $queueing_gc_sleep");
+        $self->log->debug(" - Q.disable_processing: $disable_process_benchmarkanything_queue");
 
         $self->plugin('InstallablePaths');
 
